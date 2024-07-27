@@ -2,7 +2,17 @@ import { Text, View, TextInput } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 
+import { useState } from "react";
+
 export default function HomeScreen() {
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("");
+
+  const onTranslate = () => {
+    const translation = input;
+    setOutput(translation);
+  };
+
   return (
     <>
       {/* Language selector row  */}
@@ -17,6 +27,8 @@ export default function HomeScreen() {
         <View className="flex-row gap-5">
           {/* Input */}
           <TextInput
+            value={input}
+            onChangeText={setInput}
             placeholder="Enter your text"
             className="min-h-32 text-xl   flex-1"
             multiline
@@ -24,24 +36,31 @@ export default function HomeScreen() {
           />
 
           {/* Send Button */}
-          <FontAwesome6 name="circle-arrow-right" size={24} color="royalblue" />
+          <FontAwesome6
+            onPress={onTranslate}
+            name="circle-arrow-right"
+            size={24}
+            color="royalblue"
+          />
         </View>
         <View className="flex-row justify-between">
           {/* Mic Icon */}
           <FontAwesome6 name="microphone" size={18} color="dimgray" />
-          <Text className="color-gray-500">0 / 5000</Text>
+          <Text className="color-gray-500">{input.length} / 5000</Text>
         </View>
       </View>
 
       {/* Output Container */}
 
-      <View className="gap-5 p-5 bg-gray-300">
-        <Text className="min-h-32 text-xl">Output</Text>
-        <View className="flex-row justify-between">
-          <FontAwesome6 name="volume-high" size={18} color="dimgray" />
-          <FontAwesome5 name="copy" size={18} color="dimgray" />
+      {output && (
+        <View className="gap-5 p-5 bg-gray-200">
+          <Text className="min-h-32 text-xl">{output}</Text>
+          <View className="flex-row justify-between">
+            <FontAwesome6 name="volume-high" size={18} color="dimgray" />
+            <FontAwesome5 name="copy" size={18} color="dimgray" />
+          </View>
         </View>
-      </View>
+      )}
     </>
   );
 }
