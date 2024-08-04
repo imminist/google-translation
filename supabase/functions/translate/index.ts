@@ -12,26 +12,21 @@ console.log("Hello from Functions!")
 console.log("==================================")
 
 Deno.serve(async (req) => {
-  const { name } = await req.json()
+  const { input, from, to } = await req.json()
 
   const completion = await openai.chat.completions.create({
     messages:
     [
-      {"role": "system", "content": "You are a helpful assistant."},
-      {"role": "user", "content": "Who won the world series in 2020?"},
-      {"role": "assistant", "content": "The Los Angeles Dodgers won the World Series in 2020."},
-      {"role": "user", "content": "Where was it played?"}
+      {role: "system", "content": `You are a translator. Your translate from ${from} to ${to}. Your output only the translated text`},
+      {role: "user", "content": input},
+
   ],
     model:"gpt-4o-mini",
 })
   console.log(completion.choices[0])
 
 
-  const data = {
-    message: `Hello ${name}!`,
-  }
-
-  return new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json" } },
+  return new Response(JSON.stringify(completion.choices[0].message), { headers: { "Content-Type": "application/json" } },
   )
 })
 

@@ -4,7 +4,6 @@ import { FontAwesome6 } from '@expo/vector-icons';
 
 import { useState } from 'react';
 import { supabase } from '@/utils/supabase';
-import { FunctionsHttpError } from '@supabase/supabase-js';
 
 export default function HomeScreen() {
   const [input, setInput] = useState('');
@@ -12,18 +11,13 @@ export default function HomeScreen() {
 
   const translate = async (text: string) => {
     const { data, error } = await supabase.functions.invoke('translate', {
-      body: JSON.stringify({ name: 'Hiro' }),
+      body: JSON.stringify({ input, from: 'English', to: 'Japanese' }),
     });
-
-    if (error && error instanceof FunctionsHttpError) {
-      const errorMessage = await error.context.json();
-      console.log('Function returned an error', errorMessage);
-    }
 
     console.log(error);
     console.log('Hello', data);
 
-    return 'Hello translation';
+    return data?.content || 'Something went wrong';
   };
 
   const onTranslate = async () => {
