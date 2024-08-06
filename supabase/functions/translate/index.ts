@@ -1,8 +1,4 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
-
-// Setup type definitions for built-in Supabase Runtime APIs
+import { corsHeaders } from '../_shared/cors.ts'
 import "jsr:@supabase/functions-js/edge-runtime.d.ts"
 import OpenAI from 'npm:openai'
 
@@ -12,6 +8,9 @@ console.log("Hello from Functions!")
 console.log("==================================")
 
 Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders})
+  }
   const { input, from, to } = await req.json()
 
   const completion = await openai.chat.completions.create({
@@ -26,7 +25,7 @@ Deno.serve(async (req) => {
   console.log(completion.choices[0])
 
 
-  return new Response(JSON.stringify(completion.choices[0].message), { headers: { "Content-Type": "application/json" } },
+  return new Response(JSON.stringify(completion.choices[0].message), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200, },
   )
 })
 
