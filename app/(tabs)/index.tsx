@@ -24,7 +24,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <View>
+    <View className='max-w-lg w-full mx-auto'>
       {/* Language selector row  */}
       <View className="flex-row justify-around p-5">
         <Text className="font-semibold color-blue-600">English</Text>
